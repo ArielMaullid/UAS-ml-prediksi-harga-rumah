@@ -5,11 +5,11 @@ import matplotlib.pyplot as plt
 import os
 
 # ======================================
-# LOAD MODEL & SCALER LOKAL
+# LOAD MODEL & SCALER (untuk local + cloud)
 # ======================================
 try:
-    model_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "model.pkl"))
-    scaler_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "scaler.pkl"))
+    model_path = os.path.join("models", "model.pkl")
+    scaler_path = os.path.join("models", "scaler.pkl")
 
     with open(model_path, "rb") as f:
         model = pickle.load(f)
@@ -20,7 +20,6 @@ try:
 except Exception as e:
     st.error(f"❌ Gagal memuat model atau scaler. Detail error: {e}")
     st.stop()
-
 
 # ======================================
 # TITLE & DESKRIPSI
