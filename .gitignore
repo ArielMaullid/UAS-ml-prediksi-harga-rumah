@@ -1,3 +1,4 @@
 __pycache__/
 *.pkl
 .env
+models/model.pkl
