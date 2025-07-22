@@ -6,10 +6,11 @@ import requests
 import os
 
 # ======================================
-# KONFIGURASI LINK DOWNLOAD GOOGLE DRIVE
+# KONFIGURASI FILE DARI GOOGLE DRIVE
 # ======================================
-MODEL_URL = "https://drive.google.com/uc?id=1avasFCkdkthv6stzobl6iS83A5ou_umI"
-SCALER_URL = "https://drive.google.com/uc?id=1IzjsXM93ZN0dKQ2onHbdrGRNtAwMS8Tr"
+MODEL_URL = "https://drive.google.com/uc?id=1q9oBn8O7X3ln30bKy0tZLt4pt9v34Nz_"
+SCALER_URL = "https://drive.google.com/uc?id=1WZni8e4Yp0C7ibG0Wx80CWGVh7gIpea9"
+
 
 def download_file(url, output_path):
     if not os.path.exists(output_path):
