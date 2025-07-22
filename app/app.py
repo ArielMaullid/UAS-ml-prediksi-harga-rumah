@@ -6,8 +6,9 @@ import matplotlib.pyplot as plt
 # ======================================
 # LOAD MODEL DAN SCALER
 # ======================================
-model = pickle.load(open('./models/model.pkl', 'rb'))
-scaler = pickle.load(open('./models/scaler.pkl', 'rb'))
+model = pickle.load(open('model.pkl', 'rb'))
+scaler = pickle.load(open('scaler.pkl', 'rb'))
+
 
 # ======================================
 # TITLE DAN DESKRIPSI
