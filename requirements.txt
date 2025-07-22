@@ -4,4 +4,4 @@ scikit-learn
 streamlit
 matplotlib
 seaborn
-gdown
+requests
