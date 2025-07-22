@@ -2,22 +2,39 @@ import streamlit as st
 import numpy as np
 import pickle
 import matplotlib.pyplot as plt
+import gdown
+import os
 
 # ======================================
-# LOAD MODEL DAN SCALER
+# KONFIGURASI FILE DARI GOOGLE DRIVE
 # ======================================
-model = pickle.load(open('model.pkl', 'rb'))
-scaler = pickle.load(open('scaler.pkl', 'rb'))
+MODEL_URL = "https://drive.google.com/uc?id=1avasFCkdkthv6stzobl6iS83A5ou_umI"
+SCALER_URL = "https://drive.google.com/uc?id=1IzjsXM93ZN0dKQ2onHbdrGRNtAwMS8Tr"
 
+if not os.path.exists("model.pkl"):
+    gdown.download(MODEL_URL, "model.pkl", quiet=False)
+
+if not os.path.exists("scaler.pkl"):
+    gdown.download(SCALER_URL, "scaler.pkl", quiet=False)
 
 # ======================================
-# TITLE DAN DESKRIPSI
+# LOAD MODEL & SCALER
 # ======================================
-st.set_page_config(page_title="Prediksi Harga Rumah", layout="centered")
+try:
+    with open("model.pkl", "rb") as f:
+        model = pickle.load(f)
+    with open("scaler.pkl", "rb") as f:
+        scaler = pickle.load(f)
+except Exception as e:
+    st.error("❌ Gagal memuat model atau scaler. Periksa apakah file sudah tersedia.")
+    st.stop()
+
+# ======================================
+# TITLE & DESKRIPSI
+# ======================================
+st.set_page_config(page_title="Prediksi Harga Rumah California", layout="centered")
 st.title("🏠 Prediksi Harga Rumah California")
-st.markdown("""
-Masukkan fitur-fitur properti rumah berikut untuk memprediksi harga estimasinya.
-""")
+st.markdown("Masukkan fitur-fitur properti rumah berikut untuk memprediksi harga estimasinya.")
 
 # ======================================
 # INPUT FORM
@@ -43,19 +60,17 @@ with st.form("prediksi_form"):
 # PREDIKSI & OUTPUT
 # ======================================
 if submitted:
-    features = np.array([[longitude, latitude, housing_age, total_rooms, total_bedrooms,
-                          population, households, median_income]])
+    features = np.array([[longitude, latitude, housing_age, total_rooms,
+                          total_bedrooms, population, households, median_income]])
+
     scaled_features = scaler.transform(features)
     prediction = model.predict(scaled_features)[0]
 
     st.success(f"💵 **Harga Rumah Diprediksi: ${prediction:,.2f}**")
 
-    # Optional: visualisasi prediksi
+    # Visualisasi prediksi (sebagai bar chart tunggal)
     fig, ax = plt.subplots()
-    ax.hist(model.predict(scaler.transform([[longitude, latitude, housing_age, total_rooms,
-                                             total_bedrooms, population, households, median_income]])),
-            bins=10, color="skyblue", edgecolor="black")
-    ax.set_title("Distribusi Prediksi")
-    ax.set_xlabel("Harga Rumah")
-    ax.set_ylabel("Frekuensi")
+    ax.bar(["Harga Rumah"], [prediction], color="skyblue")
+    ax.set_ylabel("Harga ($)")
+    ax.set_title("Hasil Prediksi")
     st.pyplot(fig)
