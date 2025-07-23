@@ -1,6 +1,6 @@
 import streamlit as st
 import numpy as np
-import pickle
+import joblib  # Menggunakan joblib untuk memuat model dan scaler
 import matplotlib.pyplot as plt
 import os
 
@@ -11,11 +11,9 @@ try:
     model_path = os.path.join("models", "model.pkl")
     scaler_path = os.path.join("models", "scaler.pkl")
 
-    with open(model_path, "rb") as f:
-        model = pickle.load(f)
-
-    with open(scaler_path, "rb") as f:
-        scaler = pickle.load(f)
+    # Menggunakan joblib untuk memuat model dan scaler
+    model = joblib.load(model_path)
+    scaler = joblib.load(scaler_path)
 
 except Exception as e:
     st.error(f"❌ Gagal memuat model atau scaler. Detail error: {e}")
@@ -52,15 +50,20 @@ with st.form("prediksi_form"):
 # PREDIKSI & OUTPUT
 # ======================================
 if submitted:
+    # Membuat array fitur berdasarkan input pengguna
     features = np.array([[longitude, latitude, housing_age, total_rooms,
                           total_bedrooms, population, households, median_income]])
 
+    # Menyaring fitur dengan scaler yang sudah dimuat
     scaled_features = scaler.transform(features)
+    
+    # Prediksi harga menggunakan model yang sudah dimuat
     prediction = model.predict(scaled_features)[0]
 
+    # Menampilkan hasil prediksi
     st.success(f"💵 **Harga Rumah Diprediksi: ${prediction:,.2f}**")
 
-    # Visualisasi prediksi (bar chart)
+    # Visualisasi prediksi dalam bentuk bar chart
     fig, ax = plt.subplots()
     ax.bar(["Harga Rumah"], [prediction], color="skyblue")
     ax.set_ylabel("Harga ($)")
